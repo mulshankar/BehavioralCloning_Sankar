@@ -1,5 +1,4 @@
 ## Behavioral Cloning Project
-
 ---
 The primary goals of this project are as follows:
 * Use the udacity provided simulator to collect data of good driving behavior
@@ -19,7 +18,7 @@ The primary goals of this project are as follows:
 
 **Description of files**
 
-* model.py contains the script to create and train the model
+* model.ipynb contains the script to create and train the model
 * model.h5 contains the trained convolution neural network
 * drive.py for driving the car in autonomous mode on udacity simulator
 * MyRun.mp4 demonstrates the car driving in fully autonomous mode using the convolutional network values contained in model.h5
@@ -41,7 +40,23 @@ X_train=images
 Y_train=steering_angle
 ```
 
+**Data Augmentation**
 
+While initial testing with center images alone was done to verify basic functionality, it became obvious that more training data is needed to make the network predict driving behavior better. A simple way to do that was to use images from all cameras. 
+
+An interesting thing to note was the driving direction on the track - clockwise vs anti-clockwise could bias the steer towards left or right. In order to mitigate this, a simple correction factor was added. 
+
+To simulate clockwise vs anti-clockwise driving, cv2 has a very useful feature in the "flip" method. The figure below demonstrates use of this technique. The steer angle being a mirror image could simply be negated to create the correct label.
+
+```sh
+for image,measurement in zip(images,measurements):
+    images_aug.append(image)    
+    measurements_aug.append(measurement)
+    images_aug.append(cv2.flip(image,1))
+    measurements_aug.append(measurement*-1.0)
+```
+
+![alt text][image1]
 
 
 
