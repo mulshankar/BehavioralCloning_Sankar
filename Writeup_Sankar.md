@@ -1,24 +1,15 @@
-#**Behavioral Cloning** 
-
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
+## Behavioral Cloning Project
 
 ---
-
-**Behavioral Cloning Project**
-
-The goals / steps of this project are the following:
-* Use the simulator to collect data of good driving behavior
-* Build, a convolution neural network in Keras that predicts steering angles from images
-* Train and validate the model with a training and validation set
-* Test that the model successfully drives around track one without leaving the road
-* Summarize the results with a written report
-
+The primary goals of this project are as follows:
+* Use the udacity provided simulator to collect data of good driving behavior
+* Build a convolution neural network in Keras that mimics good driving behavior
+* Based on image obtained from center, left and right cameras, steer angle is predicted
+* Test that the model successfully drives car around the track without leaving the road in fully autonomous fashion
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
+[image1]: ./examples/FlipDemonstrate.PNG "ImageAugmentation"
 [image2]: ./examples/placeholder.png "Grayscaling"
 [image3]: ./examples/placeholder_small.png "Recovery Image"
 [image4]: ./examples/placeholder_small.png "Recovery Image"
@@ -26,19 +17,52 @@ The goals / steps of this project are the following:
 [image6]: ./examples/placeholder_small.png "Normal Image"
 [image7]: ./examples/placeholder_small.png "Flipped Image"
 
-## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
+**Description of files**
 
+* model.py contains the script to create and train the model
+* model.h5 contains the trained convolution neural network
+* drive.py for driving the car in autonomous mode on udacity simulator
+* MyRun.mp4 demonstrates the car driving in fully autonomous mode using the convolutional network values contained in model.h5
+
+**Building the model**
 ---
-###Files Submitted & Code Quality
 
-####1. Submission includes all required files and can be used to run the simulator in autonomous mode
+As a first step, the car was driven in training mode using the Udacity simulator to record data for optimal driving behavior. Optimal in this case is to try to keep the car in the center of the lane as much as possible. Not being a gamer myself plus not having a joystick, it was actually very hard to drive around the test track being in the center of the lane :-) 
 
-My project includes the following files:
-* model.py containing the script to create and train the model
-* drive.py for driving the car in autonomous mode
-* model.h5 containing a trained convolution neural network 
-* writeup_report.md or writeup_report.pdf summarizing the results
+A sample training data set was provided by Udacity. In order to get to the crux of the problem, I just relied on this data-set for the project. The dataset primarily consisted of two files:
+
+1. An IMG directory that captures left, center and right camera images mounted on the car while driving around the track
+2. A drivinglog.csv file that includes path to images captured above along with measurements like steer angle, brake position, pedal and vehicle speed
+
+As mentioned above, this project primarily focuses on using an image to predict what the steer angle needs to be. Simply put, 
+
+```sh
+X_train=images
+Y_train=steering_angle
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ####2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
