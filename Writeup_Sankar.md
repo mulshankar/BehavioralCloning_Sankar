@@ -23,7 +23,7 @@ The primary goals of this project are as follows:
 **Building the driver model**
 ---
 
-As a first step, the car was driven in training mode using the Udacity simulator to record data for optimal driving behavior. Optimal in this case is to try to keep the car in the center of the lane as much as possible. Not being a gamer myself plus not having a joystick, it was actually very hard to drive around the test track being in the center of the lane :-) 
+As a first step, the car was driven in training mode using the Udacity simulator to record data for optimal driving behavior. Optimal in this case is to keep the car in the center of the lane as much as possible. Not being a gamer myself plus not having a joystick, it was actually very hard to drive around the test track being in the center of the lane :-) 
 
 A sample training data set was provided by Udacity. Since bad training data would result in a garbage in - garbage out case and to get to the crux of the problem, I  relied on the Udacity provided data-set for the project. The dataset primarily consists of two files:
 
@@ -41,7 +41,7 @@ Y_train=steering_angle
 
 While initial testing with center images alone was done to verify basic functionality, it became obvious that more training data is needed to make the network predict driving behavior better. A simple way to do that was to use images from all cameras. 
 
-While images from left and right camera were being analyzed, a small correction factor indicating steer angle that will drive it to the center was added. For example, for image from a left image, the correction factor for steer would be one that will turn the car slightly to the right. Code that performed this correction is shown below
+While images from left and right camera were being analyzed, a small correction factor indicating steer angle that will drive it to the center was added. For example, for an image from the left camera, the correction factor would steer the car slightly to the right. Code that performed this correction is shown below
 
 ```sh
 
