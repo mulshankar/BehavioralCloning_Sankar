@@ -1,5 +1,6 @@
 ## Behavioral Cloning Project
 ---
+
 The primary goals of this project are as follows:
 * Use the udacity provided simulator to collect data of good driving behavior
 * Build a convolution neural network in Keras that mimics good driving behavior
@@ -21,19 +22,19 @@ The primary goals of this project are as follows:
 * model.ipynb contains the script to create and train the model
 * model.h5 contains the trained convolution neural network
 * drive.py for driving the car in autonomous mode on udacity simulator
-* MyRun.mp4 demonstrates the car driving in fully autonomous mode using the convolutional network values contained in model.h5
+* MyRun.mp4 is a video demonstrating the car driving in fully autonomous mode using the convolutional network values contained in model.h5
 
-**Building the model**
+**Building the driver model**
 ---
 
 As a first step, the car was driven in training mode using the Udacity simulator to record data for optimal driving behavior. Optimal in this case is to try to keep the car in the center of the lane as much as possible. Not being a gamer myself plus not having a joystick, it was actually very hard to drive around the test track being in the center of the lane :-) 
 
-A sample training data set was provided by Udacity. In order to get to the crux of the problem, I just relied on this data-set for the project. The dataset primarily consisted of two files:
+A sample training data set was provided by Udacity. Since bad training data would result in a garbage in - garbage out case and to get to the crux of the problem, I  relied on the Udacity provided data-set for the project. The dataset primarily consists of two files:
 
 1. An IMG directory that captures left, center and right camera images mounted on the car while driving around the track
 2. A drivinglog.csv file that includes path to images captured above along with measurements like steer angle, brake position, pedal and vehicle speed
 
-As mentioned above, this project primarily focuses on using an image to predict what the steer angle needs to be. Simply put, 
+As mentioned before, this project primarily focuses on using an image to predict what the steer angle needs to be. Simply put, 
 
 ```sh
 X_train=images
@@ -44,9 +45,31 @@ Y_train=steering_angle
 
 While initial testing with center images alone was done to verify basic functionality, it became obvious that more training data is needed to make the network predict driving behavior better. A simple way to do that was to use images from all cameras. 
 
-An interesting thing to note was the driving direction on the track - clockwise vs anti-clockwise could bias the steer towards left or right. In order to mitigate this, a simple correction factor was added. 
+While images from left and right camera were being analyzed, a small correction factor indicating steer angle that will drive it to the center was added. For example, for image from a left image, the correction factor for steer would be one that will turn the car slightly to the right. Code that performed this correction is shown below
 
-To simulate clockwise vs anti-clockwise driving, cv2 has a very useful feature in the "flip" method. The figure below demonstrates use of this technique. The steer angle being a mirror image could simply be negated to create the correct label.
+```sh
+
+for line in lines:
+    for i in range(3):
+        source_path=line[i]
+        filename=source_path.split('/')[-1]
+        current_path='/home/carnd/P3_sankar/myData/data/IMG/'+ filename
+        image=cv2.imread(current_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        if image == None:
+            print("Invalid image:" , current_path)
+        else:
+            images.append(image)
+            measurement = float(line[3])
+            if i==1:
+                measurements.append(measurement+0.2) ## for a left image, steer right a bit
+            elif i==2:
+                measurements.append(measurement-0.2) ## for a right image, steer left a bit
+            else:
+                measurements.append(measurement)   ## for a center image, do nothing     
+```
+
+An interesting thing to note was the driving direction on the track - clockwise vs anti-clockwise could bias the steer towards left or right. It is important to add this data to the training set to help the network perform better. One way to acquire this data is to actually drive around the track in anti-clockwise fashion. Cv2 has a very useful feature in the "flip" method that performs the same task in software. The figure below demonstrates use of this technique. The steer angle being a mirror image could simply be negated to create the correct label.
 
 ```sh
 for image,measurement in zip(images,measurements):
@@ -59,7 +82,15 @@ for image,measurement in zip(images,measurements):
 ![alt text][image1]
 
 
+In total, the baseline data set size was 24108. With image augmentation via the flip technique, the size doubled to 48216. This was sufficient to train the network.
 
+** Network Architecture **
+
+Various network architectures were considered all the way from downright simple linear models to slightly complex architectures via convolutions. Nvidia published a paper that details their convolutional network architecture for mimicing human behavior.
+
+https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
+
+The 
 
 
 
