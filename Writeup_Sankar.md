@@ -10,7 +10,7 @@ The primary goals of this project are as follows:
 [//]: # (Image References)
 
 [image1]: ./examples/FlipDemonstrate.PNG "ImageAugmentation"
-[image2]: ./examples/placeholder.png "Grayscaling"
+[image2]: ./examples/NvidiaCNNarch.PNG "NvidiaCNNArchitecture"
 [image3]: ./examples/placeholder_small.png "Recovery Image"
 [image4]: ./examples/placeholder_small.png "Recovery Image"
 [image5]: ./examples/placeholder_small.png "Recovery Image"
@@ -84,18 +84,65 @@ for image,measurement in zip(images,measurements):
 
 In total, the baseline data set size was 24108. With image augmentation via the flip technique, the size doubled to 48216. This was sufficient to train the network.
 
-** Network Architecture **
+**Network Architecture**
+---
 
-Various network architectures were considered all the way from downright simple linear models to slightly complex architectures via convolutions. Nvidia published a paper that details their convolutional network architecture for mimicing human behavior.
+Various network architectures were tested all the way from simple linear models to slightly complex architectures via convolutions. Nvidia published a paper that details their convolutional network architecture for mimicing human behavior.
 
 https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
 
-The 
+The architecture had the non-linearities needed for solving the problem and being tried and tested, I implemented this architecture for the problem. 
 
+**Pre-Processing**
 
+A "lambda" layer was added to normalize the image before training the model. The lambda layer in keras is essentially similar to adding python code that does the normalizing. An important advantage to using the lambda layer is that while testing the network on validation images, it goes through the same pre-processing without having to explicitly pre-process the feed images again. Normalizing code shown below:
 
+```sh
+model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
+```
 
+In addition to normalizing, image was also cropped to remove surrounding environment data that just added to noise. The base input image was of shape 160x320x3 (RGB). The keras cropping2D function was used to reduce the image down to 70x25x3. 
 
+```sh
+model.add(Cropping2D(cropping=((70,25),(0,0))))
+```
+
+The Nvidia CNN architecture is shown below.
+
+![alt text][image1]
+
+The architecture was implemented in keras. 
+
+```sh
+model.add(Convolution2D(24,5,5,subsample=(2,2),activation="relu"))
+model.add(Convolution2D(36,5,5,subsample=(2,2),activation="relu"))
+model.add(Convolution2D(48,5,5,subsample=(2,2),activation="relu"))
+model.add(Convolution2D(64,3,3,activation="relu"))
+model.add(Convolution2D(64,3,3,activation="relu"))
+model.add(Flatten())
+model.add(Dense(100))
+model.add(Dense(50))
+model.add(Dense(10))
+model.add(Dense(1))
+```
+
+Post normalizing, the network consists of 4 convolutional layers and 3 fully connected layers. The training parameters chosen were:
+
+```sh
+Optimizer=Adam with no specific learning rate
+Loss Function='mse' as in mean squared error
+validation split=0.2
+Num of epochs=3
+
+```
+All the training was done on Amazon Web Sever using a GPU. Therefore, no generators were used. If done on a local machine without GPU, generators would have been necessary.
+
+**Final Results**
+---
+
+The trained model parameters were saved and transferred to the local machine. By using the drive.py function and using "autonomous mode" on the simulator, the car was driven on the track using network predicted steer angles. The results were good and the vehicle did not leave the track even once. 
+
+The video.py function was used to create the "MyRun".mp4 video. The frames per second parameter was set at 30.
 
 
 
