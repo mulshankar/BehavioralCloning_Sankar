@@ -12,17 +12,13 @@ The primary goals of this project are as follows:
 [image1]: ./examples/FlipDemonstrate.PNG "ImageAugmentation"
 [image2]: ./examples/NvidiaCNNarch.PNG "NvidiaCNNArchitecture"
 [image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
 
 **Description of files**
 
 * model.ipynb contains the script to create and train the model
-* model.h5 contains the trained convolution neural network
-* drive.py for driving the car in autonomous mode on udacity simulator
-* MyRun.mp4 is a video demonstrating the car driving in fully autonomous mode using the convolutional network values contained in model.h5
+* model.h5 contains the final trained convolution neural network model - weights, parameters etc...
+* drive.py is a utility function for driving the car in autonomous mode on udacity simulator
+* MyRun.mp4 is a video demonstrating the car driving in fully autonomous mode by predicting steer angles based on input images via the model contained in "model.h5"
 
 **Building the driver model**
 ---
